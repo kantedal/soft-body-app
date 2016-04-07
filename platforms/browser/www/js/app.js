@@ -21,9 +21,11 @@ var App = (function () {
         //this._softBox = new SoftBox(this._dimensions, this._divisions, this._renderer);
 
         this._softBodies = [];
-        this._softBodies.push(new SoftBox(this._dimensions, this._divisions, this._renderer));
+        this._softBodyMeshes = [];
+        this.addSoftBody(new SoftBox(this._dimensions, this._divisions, this._renderer));
+        //this.addSoftBody(new Cloth(new THREE.Vector2(40,40), new THREE.Vector2(20,20), this._renderer));
 
-        this._cameraSelector = new CameraSelector(this._softBox, this._renderer);
+        this._cameraSelector = new CameraSelector(this, this._renderer);
 
         this._renderer.start();
         this._stats.setMode(0); // 0: fps, 1: ms, 2: mb
@@ -49,6 +51,11 @@ var App = (function () {
         this._stats.end();
         requestAnimationFrame(function () { return _this.update(); });
     };
+
+    App.prototype.addSoftBody = function(softBody){
+        this._softBodies.push(softBody);
+        this._softBodyMeshes.push(softBody.bodyMesh);
+    }
 
     App.prototype.regenerateSoftBox = function (dimensions, divisions) {
         this._renderer.scene.remove(this._softBox.bodyMesh);
@@ -78,8 +85,32 @@ var App = (function () {
         configurable: true
     });
 
+    Object.defineProperty(App.prototype, "softBodyMeshes", {
+        get: function () {
+            return this._softBodyMeshes;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    Object.defineProperty(App.prototype, "softBodies", {
+        get: function () {
+            return this._softBodies;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    Object.defineProperty(App.prototype, "renderer", {
+        get: function () {
+            return this._renderer;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     App.DEVELOPER_MODE = false;
-    App.CAST_SHADOW = true;
+    App.CAST_SHADOW = false;
 
     return App;
 })();

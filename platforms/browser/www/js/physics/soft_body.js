@@ -75,22 +75,6 @@ var SoftBody = (function (_super) {
         }
     }
 
-    Object.defineProperty(SoftBody.prototype, "bodyMesh", {
-        get: function () {
-            return this._bodyMesh;
-        },
-        enumerable: true,
-        configurable: true
-    });
-
-    Object.defineProperty(SoftBody.prototype, "points", {
-        get: function () {
-            return this._points;
-        },
-        enumerable: true,
-        configurable: true
-    });
-
     return SoftBody;
 })(DynamicBody);
 //# sourceMappingURL=soft_body.js.map

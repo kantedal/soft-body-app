@@ -103,6 +103,22 @@ var DynamicBody = (function () {
         }
     };
 
+    Object.defineProperty(DynamicBody.prototype, "bodyMesh", {
+        get: function () {
+            return this._bodyMesh;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    Object.defineProperty(DynamicBody.prototype, "points", {
+        get: function () {
+            return this._points;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     Object.defineProperty(DynamicBody.prototype, "stiffness", {
         get: function(){
             return this._stiffness;

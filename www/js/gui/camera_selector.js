@@ -18,18 +18,33 @@ var CameraSelector = (function () {
                 angular.element(document.querySelector('[ng-controller="AppController"]')).scope().selectObject();
 
                 _this._renderer.controls.enabled = false;
-                _this._selectedPointMass = _this._softBody.points[0];
-                var closestDistance = 1000;
-                for (var _i = 0, _a = _this._softBody.points; _i < _a.length; _i++) {
-                    var point = _a[_i];
-                    var distance = point.position.distanceTo(_this._raycasterSelector.position);
-                    if (distance < closestDistance) {
-                        _this._selectedPointMass = point;
-                        closestDistance = distance;
+                if(_this._selectedMesh != null){
+                    var softBody = null;
+                    angular.element(document.querySelector('[ng-controller="AppController"]')).scope().selectedObject = null;
+
+                    for(var i=0; i<_this._app.softBodies.length; i++){
+                        if(_this._app.softBodies[i].bodyMesh == _this._selectedMesh){
+                            softBody = _this._app.softBodies[i];
+                            angular.element(document.querySelector('[ng-controller="AppController"]')).scope().selectedObject = _this._app.softBodies[i];
+                            break;
+                        }
+                    }
+
+                    if(softBody != null){
+                        _this._selectedPointMass = softBody.points[0];
+                        var closestDistance = 1000;
+                        for (var _i = 0, _a = softBody.points; _i < _a.length; _i++) {
+                            var point = _a[_i];
+                            var distance = point.position.distanceTo(_this._raycasterSelector.position);
+                            if (distance < closestDistance) {
+                                _this._selectedPointMass = point;
+                                closestDistance = distance;
+                            }
+                        }
+                        _this._selectedPointMass.isAttatchment = true;
+                        _this._isDragging = true;
                     }
                 }
-                _this._selectedPointMass.isAttatchment = true;
-                _this._isDragging = true;
             }
         };
 
@@ -79,6 +94,7 @@ var CameraSelector = (function () {
         this._raycasterSelectorPlane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 1, 1), new THREE.MeshLambertMaterial({ color: 0x444444, side: THREE.DoubleSide, transparent: true, opacity: 0.0 }));
         this._renderer.scene.add(this._raycasterSelectorPlane);
         this._raycasterSelectorPlane.rotation.copy(this._renderer.camera.rotation);
+        this._selectedMesh = null;
 
         // if(device.platform == "browser"){
         if(true){
@@ -107,16 +123,18 @@ var CameraSelector = (function () {
         }
         else {
             this._raycaster.setFromCamera(this._mouse, this._renderer.camera);
-            this._raycasterIntersects = this._raycaster.intersectObject(this._softBody.bodyMesh);
+            this._raycasterIntersects = this._raycaster.intersectObjects(this._app.softBodyMeshes);
             this._raycasterSelectorPlane.rotation.copy(this._renderer.camera.rotation);
             if (this._raycasterIntersects.length != 0) {
                 this._dragAllowed = true;
+                this._selectedMesh = this._raycasterIntersects[0].object;
                 this._raycasterSelector.visible = true;
                 this._raycasterSelectorPlane.position.copy(this._raycasterIntersects[0].point.clone());
                 this._raycasterSelector.position.copy(this._raycasterIntersects[0].point.clone());
             }
             else {
                 if (!this._isDragging) {
+                    this._selectedMesh = null;
                     this._raycasterSelector.visible = false;
                 }
             }

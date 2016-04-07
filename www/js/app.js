@@ -22,9 +22,10 @@ var App = (function () {
 
         this._softBodies = [];
         this._softBodyMeshes = [];
-        this._softBodies.push(new SoftBox(this._dimensions, this._divisions, this._renderer));
+        this.addSoftBody(new SoftBox(this._dimensions, this._divisions, this._renderer));
+        //this.addSoftBody(new Cloth(new THREE.Vector2(40,40), new THREE.Vector2(20,20), this._renderer));
 
-        this._cameraSelector = new CameraSelector(this._softBox, this._renderer);
+        this._cameraSelector = new CameraSelector(this, this._renderer);
 
         this._renderer.start();
         this._stats.setMode(0); // 0: fps, 1: ms, 2: mb
@@ -87,7 +88,7 @@ var App = (function () {
     Object.defineProperty(App.prototype, "softBodyMeshes", {
         get: function () {
             return this._softBodyMeshes;
-        }
+        },
         enumerable: true,
         configurable: true
     });
@@ -95,13 +96,21 @@ var App = (function () {
     Object.defineProperty(App.prototype, "softBodies", {
         get: function () {
             return this._softBodies;
-        }
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    Object.defineProperty(App.prototype, "renderer", {
+        get: function () {
+            return this._renderer;
+        },
         enumerable: true,
         configurable: true
     });
 
     App.DEVELOPER_MODE = false;
-    App.CAST_SHADOW = true;
+    App.CAST_SHADOW = false;
 
     return App;
 })();

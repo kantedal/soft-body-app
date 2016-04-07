@@ -31,18 +31,18 @@
                 <ons-back-button animation="slide-right" ng-click="deselectObject()" ng-show="selectedObject"></ons-back-button>
             </div>
 
-            <div class="center" style="font-family: 'Caveat', cursive; font-size:27px; text-transform: none;">
+            <!-- <div class="center" style="font-family: 'Roboto', 'Noto', sans-serif; font-size:18px; font-weight: 300; text-transform: uppercase;">
                 <div style="margin: auto; background-color: rgba(0,0,0,0.5); width: 200px; radius: 3px;">
                     Soft body physics
                 </div>
-            </div>
+            </div> -->
 
         </ons-toolbar>
 
         <ons-splitter var="splitter">
             <ons-splitter-side side="left" id="object-controller-view" collapse width="200px" style="opacity:0.9;">
-                <ons-page>
-                    <ons-list style="padding-top:20px;" ng-controller="ObjectController">
+                <ons-page ng-controller="ObjectController">
+                    <ons-list style="padding-top:20px;">
 
                         <ons-list-item>
                             <div class="list-header">Dimensions</div>
@@ -108,7 +108,7 @@
                         <ons-list-item>
                             <div class="list-header">Selection mode</div>
                             <div class="button-bar" style="width:100%;margin:0 auto;">
-                            <div class="button-bar__item">
+                            <div class="button-bar__item" style="margin-bottom:5px;">
                                 <input type="radio" name="segment-a" ng-model="selectionMode" value="move" checked>
                                     <button class="button-bar__button">Move</button>
                                 </div>
@@ -119,8 +119,12 @@
                             </div>
                         </ons-list-item>
                     </ons-list>
+                    <ons-bottom-toolbar style="height:50px; background-color: rgba(0,0,0,0);">
+                        <div class="center" style="padding-left:10px; padding-right:10px;">
+                            <ons-button modifier="outline" ng-click="deleteObject()" class="center" style="border:1px solid #903F3F; color:#903F3F; text-transform: none; width: 100%; text-align:center;">Remove object</ons-buttom>
+                        </div>
+                    </ons-bottom-toolbar>
                 </ons-page>
-
             </ons-splitter-side>
 
             <ons-splitter-content>
@@ -147,17 +151,17 @@
 
 
         <ons-template id="material.html">
-            <ons-dialog var="dialog" modifier="material" cancelable>
+            <ons-dialog var="dialog" modifier="material" ng-controller="AddItemController" cancelable>
                 <div style="padding: 0 0px 0px 0px">
                     <ons-list>
                         <ons-list-header style="padding-top:10px; padding-bottom:10px;">
                             Add new soft body
                         </ons-list-header>
-                        <ons-list-item>
+                        <ons-list-item ng-click="addCube()">
                             <ons-ripple></ons-ripple>
                             <div style="font-weight: 200;color:#fff;font-size:18px;">Cube</div>
                         </ons-list-item>
-                        <ons-list-item>
+                        <ons-list-item ng-click="addCloth()">
                             <ons-ripple></ons-ripple>
                             <div style="font-weight: 200;color:#fff;font-size:18px;">Cloth</div>
                         </ons-list-item>
@@ -180,6 +184,7 @@
         <script type="text/javascript" src="js/renderer.js"></script>
         <script type="text/javascript" src="js/physics/dynamic_body.js"></script>
         <script type="text/javascript" src="js/physics/soft_body.js"></script>
+        <script type="text/javascript" src="js/physics/new_cloth.js"></script>
         <script type="text/javascript" src="js/physics/presets/soft_box.js"></script>
         <script type="text/javascript" src="js/physics/point_mass.js"></script>
         <script type="text/javascript" src="js/physics/constraints/constraint.js"></script>
