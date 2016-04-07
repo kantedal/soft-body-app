@@ -24,22 +24,6 @@ var app = {
 
         var module = ons.bootstrap('my-app', ['onsen']);
 
-        module.factory('MemoService', function() {
-            return {
-                templates  : {
-                    "page1" : "templates/page1.html",
-                    "page2" : "templates/page2.html"
-                },
-
-                animationClasses : {
-                    "slide_left" : "slide-left",
-                    "slide_right" : "slide-right",
-                    "fade" : "fade",
-                    "move_left" : "move-left",
-                    "move_right" : "move-right"
-                }
-            };
-        });
 
         module.controller('AppController', function($scope) {
             $scope.selectedObject = null;
