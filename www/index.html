@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <link rel="stylesheet" href="bower_components/onsenui/css/onsenui.css"/>
+        <link rel="stylesheet" href="bower_components/onsenui/css/onsen-css-components-dark-theme.css"/>
+        <link href='css/fonts/Caveat-Bold.ttf' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="bower_components/onsenui/js/onsenui.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="bower_components/onsenui/js/angular-onsenui.js"></script>
+
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <title>Soft body physics</title>
+    </head>
+
+    <body ng-controller="AppController">
+        <ons-toolbar transparent>
+            <div class="left" style="line-height: 44px">
+                <ons-back-button animation="slide-right" ng-click="deselectObject()" ng-show="selectedObject"></ons-back-button>
+            </div>
+
+            <!-- <div class="center" style="font-family: 'Roboto', 'Noto', sans-serif; font-size:18px; font-weight: 300; text-transform: uppercase;">
+                <div style="margin: auto; background-color: rgba(0,0,0,0.5); width: 200px; radius: 3px;">
+                    Soft body physics
+                </div>
+            </div> -->
+
+        </ons-toolbar>
+
+        <ons-splitter var="splitter">
+            <ons-splitter-side side="left" id="object-controller-view" collapse width="200px" style="opacity:0.9;">
+                <ons-page ng-controller="ObjectController">
+                    <ons-list style="padding-top:20px;">
+
+                        <ons-list-item>
+                            <div class="list-header">Dimensions</div>
+                            <ons-row>
+                                <ons-col class="third-row">
+                                    <div class="input-header">X</div>
+                                    <input type="text" class="text-input" ng-blur="dimensionChange()" ng-model="dimensions.x" value="{{dimensions.x}}" style="width:100%; text-align: center;">
+                                </ons-col>
+                                <ons-col class="third-row">
+                                    <div class="input-header">Y</div>
+                                    <input type="text" class="text-input" ng-blur="dimensionChange()" ng-model="dimensions.y" value="{{dimensions.y}}" style="width:100%; text-align: center;">
+                                </ons-col>
+                                <ons-col class="third-row">
+                                    <div class="input-header">Z</div>
+                                    <input type="text" class="text-input" ng-blur="dimensionChange()" ng-model="dimensions.z" value="{{dimensions.z}}" style="width:100%; text-align: center;">
+                                </ons-col>
+                            </ons-row>
+                        </ons-list-item>
+
+                        <ons-list-item>
+                            <div class="list-header">Divisions</div>
+                            <ons-row>
+                                <ons-col class="third-row">
+                                    <div class="input-header">X</div>
+                                    <input type="text" class="text-input" ng-blur="divisionChange()" ng-model="divisions.x" value="{{divisions.x}}" style="width:100%; text-align: center;">
+                                </ons-col>
+                                <ons-col class="third-row">
+                                    <div class="input-header">Y</div>
+                                    <input type="text" class="text-input" ng-blur="divisionChange()" ng-model="divisions.y" value="{{divisions.y}}" style="width:100%; text-align: center;">
+                                </ons-col>
+                                <ons-col class="third-row">
+                                    <div class="input-header">Z</div>
+                                    <input type="text" class="text-input" ng-blur="divisionChange()" ng-model="divisions.z" value="{{divisions.z}}" style="width:100%; text-align: center;">
+                                </ons-col>
+                            </ons-row>
+                        </ons-list-item>
+
+                        <ons-list-item>
+                            <div class="list-header">Dynamic properties</div>
+
+                            <div class="list-small-header">Stiffness</div>
+                            <ons-row>
+                                <ons-col width="60px">
+                                    <input type="text" class="text-input" value="{{stiffness}}" ng-blur="stiffnessChange()" ng-model="stiffness"  style="width:80%; text-align: center;">
+                                </ons-col>
+                                <ons-col>
+                                    <input min="0" max="100" type="range" class="range range--material"  value="{{stiffness}}" ng-change="stiffnessChange()" ng-model="stiffness" style="width:100%;">
+                                </ons-col>
+                            </ons-row>
+
+                            <div class="list-small-header">Friction coef</div>
+                            <ons-row>
+                                <ons-col width="60px">
+                                    <input type="text" class="text-input" value="{{friction}}" ng-blur="frictionChange()" ng-model="friction" style="width:80%; text-align: center;">
+                                </ons-col>
+                                <ons-col>
+                                    <input type="range" class="range range--material" value="{{friction}}" ng-change="frictionChange()" ng-model="friction" style="width:100%;">
+                                </ons-col>
+                            </ons-row>
+
+                        </ons-list-item>
+
+                        <ons-list-item>
+                            <div class="list-header">Selection mode</div>
+                            <div class="button-bar" style="width:100%;margin:0 auto;">
+                            <div class="button-bar__item" style="margin-bottom:5px;">
+                                <input type="radio" name="segment-a" ng-model="selectionMode" value="move" checked>
+                                    <button class="button-bar__button">Move</button>
+                                </div>
+                                <div class="button-bar__item">
+                                <input type="radio" name="segment-a" ng-model="selectionMode" value="add_pin" >
+                                    <button class="button-bar__button">Add pin</button>
+                                </div>
+                            </div>
+                        </ons-list-item>
+                    </ons-list>
+                    <ons-bottom-toolbar style="height:50px; background-color: rgba(0,0,0,0);">
+                        <div class="center" style="padding-left:10px; padding-right:10px;">
+                            <ons-button modifier="outline" ng-click="deleteObject()" class="center" style="border:1px solid #903F3F; color:#903F3F; text-transform: none; width: 100%; text-align:center;">Remove object</ons-buttom>
+                        </div>
+                    </ons-bottom-toolbar>
+                </ons-page>
+            </ons-splitter-side>
+
+            <ons-splitter-content>
+                <div id="content"></div>
+            </ons-splitter-content>
+        </ons-splitter>
+
+
+        <ons-template id="menu.html">
+            <ons-popover ng-controller="AddItemController" direction="down" cancelable>
+                <p>Add new object</p>
+                <ons-list>
+                    <ons-list-item>
+                        <ons-ripple></ons-ripple>
+                        Cube
+                    </ons-list-item>
+                    <ons-list-item>
+                        <ons-ripple></ons-ripple>
+                        Cloth
+                    </ons-list-item>
+                </ons-list>
+            </ons-popover>
+        </ons-template>
+
+
+        <ons-template id="material.html">
+            <ons-dialog var="dialog" modifier="material" ng-controller="AddItemController" cancelable>
+                <div style="padding: 0 0px 0px 0px">
+                    <ons-list>
+                        <ons-list-header style="padding-top:10px; padding-bottom:10px;">
+                            Add new soft body
+                        </ons-list-header>
+                        <ons-list-item ng-click="addCube()">
+                            <ons-ripple></ons-ripple>
+                            <div style="font-weight: 200;color:#fff;font-size:18px;">Cube</div>
+                        </ons-list-item>
+                        <ons-list-item ng-click="addCloth()">
+                            <ons-ripple></ons-ripple>
+                            <div style="font-weight: 200;color:#fff;font-size:18px;">Cloth</div>
+                        </ons-list-item>
+                    </ons-list>
+                </div>
+            </ons-dialog>
+        </ons-template>
+
+        <ons-fab position="bottom right" ng-click="showAddBodyDialog()">
+            <ons-ripple></ons-ripple>
+            <ons-icon icon="md-plus"></ons-icon>
+        </ons-fab>
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="bower_components/jquery-2.1.0.min/index.js"></script>
+        <script type="text/javascript" src="js/threejs/three.js"></script>
+        <script type="text/javascript" src="js/threejs/editorcontrols.js"></script>
+        <script type="text/javascript" src="js/threejs/detector.js"></script>
+        <script type="text/javascript" src="js/threejs/stats.min.js"></script>
+        <script type="text/javascript" src="js/renderer.js"></script>
+        <script type="text/javascript" src="js/physics/dynamic_body.js"></script>
+        <script type="text/javascript" src="js/physics/soft_body.js"></script>
+        <script type="text/javascript" src="js/physics/new_cloth.js"></script>
+        <script type="text/javascript" src="js/physics/presets/soft_box.js"></script>
+        <script type="text/javascript" src="js/physics/point_mass.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/structure_constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/friction_constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/height_collision_constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/bend_constraint.js"></script>
+        <script type="text/javascript" src="js/gui/gui_handler.js"></script>
+        <script type="text/javascript" src="js/gui/camera_selector.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+
+    </body>
+</html>
