@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <link rel="stylesheet" href="bower_components/onsenui/css/onsenui.css"/>
+        <link rel="stylesheet" href="bower_components/onsenui/css/onsen-css-components-dark-theme.css"/>
+        <script type="text/javascript" src="bower_components/onsenui/js/onsenui.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="bower_components/onsenui/js/angular-onsenui.js"></script>
+        <script type="text/javascript">
+            var module = ons.bootstrap('my-app', ['onsen']);
+
+            module.controller('AppController', function($scope) {
+                $scope.app = "hejsan din lille apejävel";
+                $scope.addItem = function(){
+                    alert("foo!");
+                }
+
+                ons.ready(function() {
+                    ons.createPopover('menu.html').then(
+                        function(popover) {
+                          $scope.menu = popover;
+                        }
+                    );
+                });
+            });
+
+            module.controller('PageController', function($scope) {
+                ons.ready(function() {
+                  // Init code here
+                });
+            });
+        </script>
+
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <title>Soft body physics</title>
+    </head>
+    <body ng-controller="AppController">
+        <ons-toolbar>
+            <div class="center">Soft body physics</div>
+        </ons-toolbar>
+
+        <ons-splitter>
+            <ons-splitter-side side="left" swipeable collapse="portrait" width="200px">
+                <ons-page>
+                    <div id="deviceready" class="blink">
+                        <p class="event listening">Connecting to Device</p>
+                        <p class="event received">Device is Ready</p>
+                    </div>
+
+                </ons-page>
+
+            </ons-splitter-side>
+
+            <ons-splitter-content>
+                <ons-page>
+                    <div id="content">
+                    </div>
+                </ons-page>
+            </ons-splitter-content>
+        </ons-splitter>
+
+        <ons-fab position="bottom right" ng-click="menu.show($event)">
+            <ons-icon icon="md-plus"></ons-icon>
+        </ons-fab>
+
+        <ons-template id="menu.html">
+            <ons-popover ng-controller="AppController" direction="up" cancelable>
+                <p>Add new object</p>
+                <ons-list>
+                    <ons-list-item>
+                        Cube
+                    </ons-list-item>
+                    <ons-list-item>
+                        Sphere
+                    </ons-list-item>
+                </ons-list>
+            </ons-popover>
+        </ons-template>
+
+        <!-- <ons-page ng-controller="PageController">
+            <div id="content">
+            </div>
+
+            <div class="app">
+                <h1>Apache Cordova</h1>
+                <div id="deviceready" class="blink">
+                    <p class="event listening">Connecting to Device</p>
+                    <p class="event received">Device is Ready</p>
+                </div>
+
+            </div>
+        </ons-page> -->
+
+        <script type="text/javascript" src="bower_components/jquery-2.1.0.min/index.js"></script>
+        <script type="text/javascript" src="js/threejs/three.js"></script>
+        <script type="text/javascript" src="js/threejs/editorcontrols.js"></script>
+        <script type="text/javascript" src="js/threejs/detector.js"></script>
+        <script type="text/javascript" src="js/threejs/stats.min.js"></script>
+        <script type="text/javascript" src="js/renderer.js"></script>
+        <script type="text/javascript" src="js/physics/dynamic_body.js"></script>
+        <script type="text/javascript" src="js/physics/soft_body.js"></script>
+        <script type="text/javascript" src="js/physics/presets/soft_box.js"></script>
+        <script type="text/javascript" src="js/physics/point_mass.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/structure_constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/friction_constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/height_collision_constraint.js"></script>
+        <script type="text/javascript" src="js/physics/constraints/bend_constraint.js"></script>
+        <script type="text/javascript" src="js/gui/gui_handler.js"></script>
+        <script type="text/javascript" src="js/gui/camera_selector.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+
+    </body>
+</html>
