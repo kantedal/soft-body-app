@@ -71,7 +71,7 @@ var app = {
                             break;
                         }
                     }
-                    console.log(app._softBodyEngine.softBodyMeshes.length);
+
                     app._softBodyEngine.renderer.scene.remove($scope.selectedObject.bodyMesh);
                     $scope.deselectObject();
                 }
@@ -132,6 +132,7 @@ var app = {
             };
 
             $scope.stiffnessChange = function(){
+                console.log($scope.selectedObject);
                 $scope.selectedObject.setStiffness($scope.stiffness);
             };
 

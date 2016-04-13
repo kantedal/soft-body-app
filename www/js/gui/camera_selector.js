@@ -21,11 +21,13 @@ var CameraSelector = (function () {
                 if(_this._selectedMesh != null){
                     var softBody = null;
                     angular.element(document.querySelector('[ng-controller="AppController"]')).scope().selectedObject = null;
+                    angular.element(document.querySelector('[ng-controller="ObjectController"]')).scope().selectedObject = null;
 
                     for(var i=0; i<_this._app.softBodies.length; i++){
                         if(_this._app.softBodies[i].bodyMesh == _this._selectedMesh){
                             softBody = _this._app.softBodies[i];
                             angular.element(document.querySelector('[ng-controller="AppController"]')).scope().selectedObject = _this._app.softBodies[i];
+                            angular.element(document.querySelector('[ng-controller="ObjectController"]')).scope().selectedObject = _this._app.softBodies[i];
                             break;
                         }
                     }

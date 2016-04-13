@@ -58,9 +58,9 @@ var App = (function () {
     }
 
     App.prototype.regenerateSoftBox = function (dimensions, divisions) {
-        this._renderer.scene.remove(this._softBox.bodyMesh);
-        this._softBox = new SoftBox(dimensions, divisions, this._renderer);
-        this._cameraSelector.setSoftbody(this._softBox);
+        this._renderer.scene.remove(angular.element(document.querySelector('[ng-controller="ObjectController"]')).scope().selectedObject.bodyMesh);
+        var softBody = new SoftBox(dimensions, divisions, this._renderer);
+        this.addSoftBody(softBody);
     };
 
     Object.defineProperty(App.prototype, "softBox", {
