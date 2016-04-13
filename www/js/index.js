@@ -24,6 +24,22 @@ var app = {
 
         var module = ons.bootstrap('my-app', ['onsen']);
 
+        module.factory('MemoService', function() {
+            return {
+                templates  : {
+                    "page1" : "templates/page1.html",
+                    "page2" : "templates/page2.html"
+                },
+
+                animationClasses : {
+                    "slide_left" : "slide-left",
+                    "slide_right" : "slide-right",
+                    "fade" : "fade",
+                    "move_left" : "move-left",
+                    "move_right" : "move-right"
+                }
+            };
+        });
 
         module.controller('AppController', function($scope) {
             $scope.selectedObject = null;
@@ -55,7 +71,7 @@ var app = {
                             break;
                         }
                     }
-                    console.log(app._softBodyEngine.softBodyMeshes.length);
+
                     app._softBodyEngine.renderer.scene.remove($scope.selectedObject.bodyMesh);
                     $scope.deselectObject();
                 }
@@ -116,6 +132,7 @@ var app = {
             };
 
             $scope.stiffnessChange = function(){
+                console.log($scope.selectedObject);
                 $scope.selectedObject.setStiffness($scope.stiffness);
             };
 
